@@ -1,0 +1,79 @@
+setgridsize(256,180,1)
+setcellsize(2e-9,2e-9,2e-9)
+
+// defining shape of track
+a:=imageShape("chain.png")
+setgeom(a) 
+SetPBC(3,0,0)
+
+// assigning initial values to required constants.
+
+Msat = 5.8e5 //saturation magnetisation
+Aex = -15e-12 //Exchange energy
+Dind = 4e-3 //DMI, changing it to one removes the skyrmion from the system
+Ku1 = 1.0e6 //uni-axis anisotropy constant
+AnisU = vector(0,0,1) // direction of anisotropy
+alpha = 0.9 // damping constant
+
+
+// SETTING UP MAGNETIC FIELD, AND DEFINING SKYRMION
+
+
+m = Uniform(1,1,1)
+//m.setInShape(a,NeelSkyrmion(-1,1).transl(215e-9,87e-9, 0))
+
+m.setInShape(a,NeelSkyrmion(-1,1).transl(210e-9,-87e-9, 0))
+
+relax()
+saveas(m,"NeelSkyrmion")
+
+
+// Some constants for our system
+
+ lambda = 1 //scholwenski lambda parameter 
+
+// Pol = 0.4 //electrical current polarization
+
+//xi = 0.4 //Non-adiabaticity of STT for up to down
+xi= 0.6    // from down to up
+
+//Desired Output Files
+
+autosave(m,4e-10)
+tableAutosave(1e-11)
+tableAdd(ext_bubblepos)
+tableAdd(ext_bubblespeed)
+tableAdd(ext_topologicalcharge)
+
+
+J = vector(9e11,-5.3e11,0) // bottom right to top left
+Pol= 1
+run(9.4e-9)
+
+alpha= 1.5
+xi= 0.1
+
+
+J = vector(9e11,-5.3e11,0) // bottom right to top left
+Pol= 1
+run(14e-9)
+
+//J = vector(2e12,-1.5e12,0) // bottom right to top left
+//Pol= 1
+//run(6e-9)
+
+//J = vector(2.5e12,0.1e12,0) // top right to bottom left
+//Pol= 1
+//run(4e-9)
+//relax()
+
+
+
+
+
+
+
+
+
+//increasing alpha makes skyrmion move upwards but it also reduces its sppeed
+// Surprisingly, increasing xi also move skyrmion upwards and increases its speed
